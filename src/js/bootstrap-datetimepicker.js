@@ -516,7 +516,7 @@
         '.timepicker .timepicker-minutes table');
       table.parent().hide();
       var html = '';
-
+      var current = 0;
       for (var i = 0; i < this.TableRow  ; i++) {
         html += '<tr>';
         for (var j = 0; j < this.TableColumn ; j += 1) {
