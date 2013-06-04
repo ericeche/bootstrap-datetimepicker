@@ -22,6 +22,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * =========================================================
+ * Universty of Michigan - Minutes increase changes
+ * Added extra parameter to manipulate the minute increase, in 
+ * time intervals of deltaMinutes. What is an acceptable increase
+ * interval is yet to be decided.
+ * added variable deltaMinutes
+ * Using upperDelta minutes = 60
  */
 
 (function($) {
@@ -54,6 +60,21 @@
       this.pickTime = options.pickTime;
       this.isInput = this.$element.is('input');
       this.component = false;
+      this.minIncrease = options.minIncrease;
+      this.TableRow = 5;
+      this.TableColumn = 4;
+
+      var minutesObj = {  3: { row: 5, column: 4 },  5: { row: 3,column: 4 },
+                         10: { row: 2, column: 3 }, 15: { row: 1,column: 4 },
+                         20: { row: 1, column: 3 }, 30: { row: 1,column: 2 },};
+
+      if(this.minIncrease in minutesObj) {
+        this.TableRow    = minutesObj[this.minIncrease]['row'] ;
+        this.TableColumn = minutesObj[this.minIncrease]['column'];
+       }
+      else
+        this.minIncrease = 3;
+
       if (this.$element.find('.input-append') || this.$element.find('.input-prepend'))
           this.component = this.$element.find('.add-on');
       this.format = options.format;
@@ -495,14 +516,14 @@
         '.timepicker .timepicker-minutes table');
       table.parent().hide();
       var html = '';
-      var current = 0;
-      for (var i = 0; i < 5; i++) {
+
+      for (var i = 0; i < this.TableRow  ; i++) {
         html += '<tr>';
-        for (var j = 0; j < 4; j += 1) {
-          var c = current.toString();
-          html += '<td class="minute">' + padLeft(c, 2, '0') + '</td>';
-          current += 3;
-        }
+        for (var j = 0; j < this.TableColumn ; j += 1) {
+           var c = current.toString();
+           html += '<td class="minute">' + padLeft(c, 2, '0') + '</td>';
+           current += this.minIncrease;
+          }
         html += '</tr>';
       }
       table.html(html);
@@ -643,7 +664,7 @@
       },
 
       incrementMinutes: function(e) {
-        this._date.setUTCMinutes(this._date.getUTCMinutes() + 1);
+        this._date.setUTCMinutes(this._date.getUTCMinutes() + this.minIncrease);
       },
 
       incrementSeconds: function(e) {
@@ -655,7 +676,7 @@
       },
 
       decrementMinutes: function(e) {
-        this._date.setUTCMinutes(this._date.getUTCMinutes() - 1);
+        this._date.setUTCMinutes(this._date.getUTCMinutes() - this.minIncrease);
       },
 
       decrementSeconds: function(e) {
